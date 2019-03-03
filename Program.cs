@@ -12,152 +12,152 @@ namespace ATMinterface
 
         static void Main(string[] args)
         {
-
             AccountLogin();
-            InsideAccount();
-
+            InsideAccountInteraction();
         }
 
         //System login information, gives multiple attempts locking out after 3 failed attempts
-        static public void AccountLogin() { 
-            int[] accountInfo = { 11, 8 };
-            int[] enteredInfo = { 1, 1 };
-            int b = 0;
+        public static void AccountLogin() { 
+            int accountNum = 11;
+            int accountPin = 8;
+            int enteredAccountNum;
+            int enteredPin;
 
-            for (int i = 0; i <= 3; i++)
+            for (int attempts = 0; attempts <= 3; attempts++)
             {
-                if (i == 1)
+                if (attempts == 1)
                 {
                     Console.WriteLine("You have 2 attempts remaining...");
-                    b = 0;
                 }
-                if (i == 2)
+                if (attempts == 2)
                 {
                     Console.WriteLine("You have 1 attempt remaining...");
-                    b = 0;
                 }
-                if (i == 3)
+                if (attempts == 3)
                 {
                     Console.WriteLine("You have attempted too many times, the system will lock you out for 5 seconds");
                     System.Threading.Thread.Sleep(5000);
-                    i = 0;
-                    b = 0;
+                    attempts = 0;
                 }
 
-                while (b < 1)
-                {
-                    Console.WriteLine("Enter the account number...");
-                    enteredInfo[0] = Convert.ToInt32(Console.ReadLine());
-                    Console.WriteLine("Enter the account PIN...");
-                    enteredInfo[1] = Convert.ToInt32(Console.ReadLine());
-                    b = 1;
-                }
+                
+                Console.WriteLine("Enter the account number...");
+                enteredAccountNum = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter the account PIN...");
+                enteredPin = Convert.ToInt32(Console.ReadLine());
+                    
 
-                if (enteredInfo[0] != accountInfo[0])
+                if (enteredAccountNum != accountNum)
                 {
                     Console.WriteLine("Your user information was not correct...");
-                    b = 0;
                 }
-                if (enteredInfo[0] == 11 && enteredInfo[1] != 8)
+                if (enteredAccountNum == accountNum && enteredPin != accountPin)
                 {
                     Console.WriteLine("Your password does not match your user information...");
-                    b = 0;
                 }
-                if (enteredInfo[0] == accountInfo[0] && enteredInfo[1] == accountInfo[1])
+                if (enteredAccountNum == accountNum && enteredPin == accountPin)
                 {
                     Console.WriteLine("You have successfully entered your information!");
+                    Console.WriteLine("Accessing your account...");
+                    System.Threading.Thread.Sleep(2000);
                     return;
                 }
             }
         }
 
         // All the functions for inside the ATM system
-        static void InsideAccount()
+        public static void InsideAccountInteraction()
         {
             decimal deposit, withdraw;
             string action;
-            int i = 0;
 
-            Console.WriteLine("What would you like to do? \n" +
-                "a) Withdraw\n" +
-                "b) Deposit\n" +
-                "c) Exit");
-            action = Console.ReadLine();
+            do {
+                Console.Clear();
+                Console.WriteLine("What would you like to do? \n" +
+                    "a) Withdraw\n" +
+                    "b) Deposit\n" +
+                    "c) Exit");
+                action = Console.ReadLine();
 
-            // Withdraw function
-            while (action == "a")
-            {
-                Console.WriteLine("You currently have: ${0} \nHow much would you like to withdraw?", balance);
-                withdraw = Convert.ToDecimal(Console.ReadLine());
-                if (balance - withdraw >= 0)
-                {
-                    balance = balance - withdraw;
-                    Console.WriteLine("Your money is being processed. You have ${0} remaining", balance);
-                }
-                else
-                {
-                    Console.WriteLine("You have insufficient funds.");
-                }
-                Console.WriteLine("Would you like to make another withdrawal? yes/no");
-                string tempaction = Console.ReadLine();
-                while (i == 0)
-                {
 
-                    if (tempaction == "yes")
+
+                // Withdraw function
+                while (action == "a")
+                {
+                    Console.WriteLine("You currently have: ${0} \nHow much would you like to withdraw?", balance);
+                    withdraw = Convert.ToDecimal(Console.ReadLine());
+                    if (balance - withdraw >= 0)
                     {
-                        action = "a";
-                        break;
-                    }
-                    if (tempaction == "no")
-                    {
-                        Console.WriteLine("Exiting to main menu...");
-                        InsideAccount();
+                        balance = balance - withdraw;
+                        Console.WriteLine("Your money is being processed. You have ${0} remaining", balance);
                     }
                     else
                     {
-                        Console.WriteLine("You have entered an incorrect value" +
-                            "\nWould you like to make another transaction? yes/no");
-                        tempaction = Console.ReadLine();
+                        Console.WriteLine("You have insufficient funds.");
                     }
-                }
-            }
+                    Console.WriteLine("Would you like to make another withdrawal? yes/no");
+                    string anotherWithdrawal = Console.ReadLine();
+                    do
+                    {
 
-            // Deposit function
-            while (action == "b")
-            {
+                        if (anotherWithdrawal == "yes")
+                        {
+                            Console.WriteLine("Preparing for another withdrawal...");
+                        }
+                        if (anotherWithdrawal == "no")
+                        {
+                            Console.WriteLine("Exiting to main menu...");
+                            System.Threading.Thread.Sleep(2000);
+                            action = "main menu";
+                        }
+                        if (anotherWithdrawal != "yes" && anotherWithdrawal != "no")
+                        {
+                            Console.WriteLine("You have entered an incorrect value.\n" +
+                                "Would you like to make another withdrawal? yes/no");
+                            anotherWithdrawal = Console.ReadLine();
+                        }
+                    } while (anotherWithdrawal != "yes" && anotherWithdrawal != "no");
+                }
+
+                // Deposit function
+                while (action == "b")
+                {
+
+                    Console.WriteLine("How much would you like to deposit?");
+                    deposit = Convert.ToDecimal(Console.ReadLine());
+                    balance = balance + deposit;
+                    Console.WriteLine("You have deposited ${0} \nYour new balance is: ${1}", deposit, balance);
+                    Console.WriteLine("Would you like to make another deposit? yes/no");
+                    string anotherDeposit = Console.ReadLine();
+                    do
+                    {
+                        if (anotherDeposit == "yes")
+                        {
+                            Console.WriteLine("Preparing for another deposit...");
+                        }
+
+                        if (anotherDeposit == "no")
+                        {
+                            Console.WriteLine("Exiting to main menu...");
+                            System.Threading.Thread.Sleep(2000);
+                            action = "main menu";
+                        }
+
+                        if (anotherDeposit != "yes" && anotherDeposit != "no")
+                        {
+                            Console.WriteLine("You have entered an incorrect value.\n" +
+                                "Would you like to make another deposit? yes/no");
+                        }
+                    } while (anotherDeposit != "yes" && anotherDeposit != "no");
+                }
+
                 
-                Console.WriteLine("How much would you like to deposit?");
-                deposit = Convert.ToDecimal(Console.ReadLine());
-                balance = balance + deposit;
-                Console.WriteLine("You have deposited ${0} \nYour new balance is: ${1}", deposit, balance);
-                Console.WriteLine("Would you like to make another deposit? yes/no");
-                string tempaction = Console.ReadLine();
-                if (tempaction == "no")
-                {
-                    InsideAccount();
-                }
-                if (tempaction == "yes")
-                {
-                    
-                }
-                else
-                {
-                    Console.WriteLine("You have entered an incorrect value. Exiting to main menu");
-                    InsideAccount();
-                }
-            }
-            if (action == "c")
-            {
-                Console.WriteLine("Thank you for using our ATM.\n" +
+            } while (action != "c");
+
+            Console.WriteLine("Thank you for using our ATM.\n" +
                     "Have a nice day.");
-                System.Threading.Thread.Sleep(2000);
-                System.Environment.Exit(0);
-            }
-            else
-            {
-                Console.WriteLine("You have entered an incorrect value. Please choose an option from the menu...");
-                InsideAccount();
-            }
+            System.Threading.Thread.Sleep(2000);
+            System.Environment.Exit(0);
         }
     }
 }
